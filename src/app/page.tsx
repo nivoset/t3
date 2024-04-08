@@ -5,6 +5,7 @@ import { api } from "~/trpc/server";
 
 export default async function Home() {
   const hello = await api.post.hello({ text: "from tRPC" });
+  const posts = await api.post.getAll();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
@@ -35,6 +36,9 @@ export default async function Home() {
               deploy it.
             </div>
           </Link>
+        </div>
+        <div className="flex flex-col gap-2 divide-y-2 divide-yellow-100">
+          {posts?.map((post) => (<div className="first-letter:capitalize px-1" key={post.id}>{post.name}</div>))}
         </div>
         <div className="flex flex-col items-center gap-2">
           <p className="text-2xl text-white">
