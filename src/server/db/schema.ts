@@ -19,6 +19,16 @@ import {
  */
 export const createTable = pgTableCreator((name) => `t3_${name}`);
 
+export const user = createTable("user", {
+  id: serial("id").primaryKey(),
+  email: varchar("email", { length: 256 }).unique().notNull(),
+  password: varchar("password", { length: 256 }).notNull(),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updated_at"),
+});
+
 export const posts = createTable(
   "post",
   {
@@ -29,8 +39,10 @@ export const posts = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt"),
+    userId: serial("user_id").references(() => user.id),
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),
   })
 );
+
